@@ -9,6 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.geoquiz_lr6.ui.theme.GeoQuiz_LR6Theme
@@ -47,4 +52,21 @@ fun GeoQuizApp() {
         true,
         true
     )
+    var currentQuestion by remember { // Номер текущего вопроса
+        mutableIntStateOf(0)
+    }
+
+    var correctAnswers by remember { // Количество правильных ответов
+        mutableIntStateOf(0)
+    }
+
+    var answerSelected by remember { // Были ли уже нажаты True или False
+        mutableStateOf(false)
+    }
+
+    var showResult by remember {// Показывать ли результат
+        mutableStateOf(false)
+    }
+
+
 }
