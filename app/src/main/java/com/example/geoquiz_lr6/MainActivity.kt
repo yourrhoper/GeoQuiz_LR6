@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -77,53 +78,106 @@ fun GeoQuizApp() {
         mutableStateOf(false)
     }
 
-    Column( // визуал
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "GeoQuiz")// Заголовок
-        Spacer(modifier = Modifier.height(30.dp))
 
+        // Заголовок
+        Text(text = "GeoQuiz")
 
-        Text(text = questions[currentQuestion]) // Текущий вопрос
+        Spacer(
+            modifier = Modifier.height(30.dp)
+        )
 
-        Spacer(modifier = Modifier.height(30.dp))
+        // Текущий вопрос
+        Text(
+            text = questions[currentQuestion]
+        )
+
+        Spacer(
+            modifier = Modifier.height(30.dp)
+        )
+
         // Кнопки True и False
-        // Показываем их только до ответа
-        if (!answerSelected) {
-            Row{
-                Button(
-                    onClick = {
-                        if (answers[currentQuestion]) {
-                            correctAnswers++
-                        }
+        Row {
 
-                        answerSelected = true
+            Button(
+                onClick = {
+                    if (answers[currentQuestion]) {
+                        correctAnswers++
                     }
-                ) {
-                    Text("True")
-                }
 
-                Spacer(
-                    modifier = Modifier.width(10.dp)
-                )
-
-                Button(
-                    onClick = {
-                        if (!answers[currentQuestion]) {
-                            correctAnswers++
-                        }
-
-                        answerSelected = true
-                    }
-                ) {
-                    Text("False")
-                }
+                    answerSelected = true
+                },
+                enabled = !answerSelected
+            ) {
+                Text("True")
             }
 
+            Spacer(
+                modifier = Modifier.width(10.dp)
+            )
+
+            Button(
+                onClick = {
+                    if (!answers[currentQuestion]) {
+                        correctAnswers++
+                    }
+
+                    answerSelected = true
+                },
+                enabled = !answerSelected
+            ) {
+                Text("False")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        if (currentQuestion < questions.lastIndex) { // Кнопка Next
+            Button(
+                onClick = {
+                    currentQuestion++
+                    answerSelected = false
+                },
+                enabled = answerSelected
+            ) {
+                Text("Next")
+            }
+        }
+
+        // Если отвечен последний вопрос
+        if (currentQuestion == questions.lastIndex && answerSelected) {
+            showResult = true // показать результат
+        }
+
+        // Всплывающий результат
+        if (showResult) {
+
+            AlertDialog(
+                onDismissRequest = {showResult = false},
+
+                title = {Text("Результат")},
+
+                text = {Text("Правильных ответов: " + "$correctAnswers из ${questions.size}")},
+
+                confirmButton = {
+                    Button(
+                        onClick = { // Запускаем тест заново
+                            currentQuestion = 0
+                            correctAnswers = 0
+                            answerSelected = false
+                            showResult = false
+                        }
+                    ) {
+                        Text("OK")
+                    }
+                }
+            )
         }
     }
 }
