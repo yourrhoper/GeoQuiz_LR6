@@ -74,7 +74,7 @@ fun GeoQuizApp() {
         mutableStateOf(false)
     }
 
-    var showResult by remember {// Показывать ли результат
+    var showResult by remember { // Показывать ли результат
         mutableStateOf(false)
     }
 
@@ -85,26 +85,13 @@ fun GeoQuizApp() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        // Заголовок
         Text(text = "GeoQuiz")
-
-        Spacer(
-            modifier = Modifier.height(30.dp)
-        )
-
-        // Текущий вопрос
-        Text(
-            text = questions[currentQuestion]
-        )
-
-        Spacer(
-            modifier = Modifier.height(30.dp)
-        )
+        Spacer(modifier = Modifier.height(30.dp))
+        Text(text = questions[currentQuestion]) // Текущий вопрос
+        Spacer(modifier = Modifier.height(30.dp))
 
         // Кнопки True и False
         Row {
-
             Button(
                 onClick = {
                     if (answers[currentQuestion]) {
@@ -149,22 +136,28 @@ fun GeoQuizApp() {
                 Text("Next")
             }
         }
+        if (currentQuestion >= 1){
+            Button(
+                onClick = {
+                    currentQuestion--
+                    answerSelected = false
+                },
+                enabled = answerSelected
+            ) {
+                Text("Previous")
+            }
+        }
 
-        // Если отвечен последний вопрос
-        if (currentQuestion == questions.lastIndex && answerSelected) {
+        if (currentQuestion == questions.lastIndex && answerSelected) { // Если отвечен последний вопрос
             showResult = true // показать результат
         }
 
-        // Всплывающий результат
-        if (showResult) {
 
+        if (showResult) { // Всплывающий результат
             AlertDialog(
                 onDismissRequest = {showResult = false},
-
                 title = {Text("Результат")},
-
                 text = {Text("Правильных ответов: " + "$correctAnswers из ${questions.size}")},
-
                 confirmButton = {
                     Button(
                         onClick = { // Запускаем тест заново
